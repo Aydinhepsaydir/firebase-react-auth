@@ -1,5 +1,7 @@
 import app from "firebase/app";
 import "firebase/auth";
+import "firebase/database";
+import "firebase/firestore";
 
 var config = {
   apiKey: "AIzaSyBQ8kaEUeEmTbDNYAiDyJhyO3Xbpb8xOlI",
@@ -16,6 +18,8 @@ class Firebase {
     app.initializeApp(config);
 
     this.auth = app.auth();
+    this.db = app.database();
+    this.cloudDb = app.firestore();
   }
 
   // *** Auth API ***
@@ -30,6 +34,16 @@ class Firebase {
   doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
 
   doPasswordUpdate = password => this.auth.currentUser.updatePassword(password);
+
+  // *** Realtime Database User API ***
+  user = uid => this.db.ref(`users/${uid}`);
+
+  users = () => this.db.ref("users");
+
+  // *** Cloud Firestore User API ***
+  cloudUser = uid => this.cloudDb.collection("users").doc(uid.toString());
+
+  cloudUsers = () => this.cloudDb.collection("users");
 }
 
 export default Firebase;

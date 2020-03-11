@@ -32,6 +32,23 @@ class SignUpFormBase extends Component {
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
+        // console.log(authUser);
+        //create user in realtime database
+        return this.props.firebase
+          .user(authUser.user.uid)
+          .set({ username, email });
+      })
+      .then(authUser => {
+        //create user in cloud firestore
+
+        console.log(authUser);
+
+        // return this.props.firebase
+        //   .cloudUser(authUser.user.uid)
+        //   .set({ username, email });
+      })
+      .catch(e => console.log(e))
+      .then(authUser => {
         this.setState({ ...INITIAL_STATE });
         //withRouter() gives history prop from react-router
         //history allows us to redirect user to another page by pushing a route to it
