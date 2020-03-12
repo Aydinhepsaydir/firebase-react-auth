@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import { SignUpLink } from "../SignUp";
-import { withFirebase } from "../Firebase";
+import { withFirebase, StyledFirebaseAuth } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
 import { PasswordForgetLink } from "../PasswordForget";
 
@@ -68,6 +68,11 @@ class SignInFormBase extends Component {
           Sign In
         </button>
         {error && <p>{error.message}</p>}
+
+        <StyledFirebaseAuth
+          uiConfig={this.props.firebase.uiConfig()}
+          firebaseAuth={this.props.firebase.auth}
+        />
       </form>
     );
   }

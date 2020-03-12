@@ -1,7 +1,11 @@
+import React from "react";
 import app from "firebase/app";
+import firebase from "firebase";
 import "firebase/auth";
 import "firebase/database";
 import "firebase/firestore";
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import { Redirect } from "react-router-dom";
 
 var config = {
   apiKey: "AIzaSyBQ8kaEUeEmTbDNYAiDyJhyO3Xbpb8xOlI",
@@ -21,6 +25,17 @@ class Firebase {
     this.db = app.database();
     this.cloudDb = app.firestore();
   }
+
+  uiConfig = () => {
+    return {
+      signInFlow: "popup",
+      signInSuccessUrl: "/home",
+      signInOptions: [firebase.auth.FacebookAuthProvider.PROVIDER_ID],
+      callbacks: {
+        signInSuccess: () => <Redirect to="/home" />
+      }
+    };
+  };
 
   // *** Auth API ***
   doCreateUserWithEmailAndPassword = (email, password) =>
@@ -47,3 +62,5 @@ class Firebase {
 }
 
 export default Firebase;
+
+export { StyledFirebaseAuth };
