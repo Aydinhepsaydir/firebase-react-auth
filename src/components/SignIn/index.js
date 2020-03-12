@@ -31,14 +31,19 @@ class SignInFormBase extends Component {
     const { email, password } = this.state;
     this.props.firebase
       .doSignInWithEmailAndPassword(email, password)
-      .then(() => {
-        this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
+      .then(authUser => {
+        console.log("firebase current user: \n", authUser);
+        // this.setState({ ...INITIAL_STATE });
+        // this.props.history.push(ROUTES.HOME);
       })
       .catch(error => {
         this.setState({ error });
       });
     event.preventDefault();
+  };
+
+  componentDidUpdate = () => {
+    console.log("current user: \n", this.props.firebase.auth.currentUser);
   };
 
   onChange = event => {
