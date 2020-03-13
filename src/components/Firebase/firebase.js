@@ -22,10 +22,6 @@ class Firebase {
     this.auth = app.auth();
     this.db = app.database();
     this.cloudDb = app.firestore();
-
-    this.user = {
-      username: ""
-    };
   }
 
   // *** Auth API ***
@@ -46,16 +42,13 @@ class Firebase {
 
   users = () => this.db.ref("users");
 
-  getUsername = uid =>
+  getUser = uid =>
     this.db
       .ref(`users/${uid}`)
       .once("value")
       .then(snapshot => {
         const userObject = snapshot.val();
-        this.user = {
-          username: userObject.username
-        };
-        return this.user;
+        return userObject;
       });
 
   // *** Cloud Firestore User API ***
