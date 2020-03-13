@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
-import { withFirebase } from "../Firebase";
+import { withFirebase, firebase } from "../Firebase";
 import { compose } from "recompose";
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 
 const SignUpPage = () => (
   <div>
@@ -33,10 +34,10 @@ class SignUpFormBase extends Component {
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
         console.log(authUser);
-        //create user in realtime database
-        // return this.props.firebase
-        //   .user(authUser.user.uid)
-        //   .set({ username, email });
+        // create user in realtime database
+        return this.props.firebase
+          .user(authUser.user.uid)
+          .set({ username, email });
       })
       // .then(authUser => {
       //create user in cloud firestore
@@ -59,6 +60,36 @@ class SignUpFormBase extends Component {
     event.preventDefault();
   };
 
+  uiConfig = () => {
+    return {
+      signInFlow: "redirect",
+      signInOptions: [firebase.auth.FacebookAuthProvider.PROVIDER_ID],
+      callbacks: {
+        signInSuccess: () => this.addToRealtime()
+      }
+    };
+  };
+
+  addToRealtime = () => {
+    const { currentUser } = this.props.firebase.auth;
+    const { uid } = currentUser;
+
+    // console.log("currentUser TYPE: \n", typeof currentUser);
+    // console.log("currentUser: \n", currentUser);
+
+    this.props.firebase.users().on("value", snapshot => {
+      const usersObject = snapshot.val();
+      if (!usersObject.hasOwnProperty(uid)) {
+        this.props.firebase
+          .user(uid)
+          .set({ username: currentUser.displayName, email: currentUser.email })
+          .then(this.props.history.push(ROUTES.HOME));
+      } else {
+        return this.props.history.push(ROUTES.HOME);
+      }
+    });
+  };
+
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
@@ -71,7 +102,13 @@ class SignUpFormBase extends Component {
       this.username === "";
 
     return (
-      <form onSubmit={this.onSubmit}>
+      <form
+        onSubmit={
+          /*this.onSubmit*/ console.log(
+            "you just submitted the email and password sign up form"
+          )
+        }
+      >
         {/* controlled components */}
         <input
           name="username"
@@ -105,6 +142,11 @@ class SignUpFormBase extends Component {
           Sign Up
         </button>
         {this.error && <p>{this.error.message}</p>}
+
+        <StyledFirebaseAuth
+          uiConfig={this.uiConfig()}
+          firebaseAuth={this.props.firebase.auth}
+        />
       </form>
     );
   }

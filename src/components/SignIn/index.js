@@ -32,9 +32,9 @@ class SignInFormBase extends Component {
     this.props.firebase
       .doSignInWithEmailAndPassword(email, password)
       .then(authUser => {
-        console.log("firebase current user: \n", authUser);
-        // this.setState({ ...INITIAL_STATE });
-        // this.props.history.push(ROUTES.HOME);
+        // console.log("firebase current user: \n", authUser);
+        this.setState({ ...INITIAL_STATE });
+        this.props.history.push(ROUTES.HOME);
       })
       .catch(error => {
         this.setState({ error });
@@ -54,31 +54,33 @@ class SignInFormBase extends Component {
     const { email, password, error } = this.state;
     const isInvalid = password === "" || email === "";
     return (
-      <form onSubmit={this.onSubmit}>
-        <input
-          name="email"
-          value={email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        <input
-          name="password"
-          value={password}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Password"
-        />
-        <button disabled={isInvalid} type="submit">
-          Sign In
-        </button>
-        {error && <p>{error.message}</p>}
-
+      <>
         <StyledFirebaseAuth
           uiConfig={this.props.firebase.uiConfig()}
           firebaseAuth={this.props.firebase.auth}
         />
-      </form>
+        <h2>Or, if you don't want to use Facebook:</h2>
+        <form onSubmit={this.onSubmit}>
+          <input
+            name="email"
+            value={email}
+            onChange={this.onChange}
+            type="text"
+            placeholder="Email Address"
+          />
+          <input
+            name="password"
+            value={password}
+            onChange={this.onChange}
+            type="password"
+            placeholder="Password"
+          />
+          <button disabled={isInvalid} type="submit">
+            Sign In
+          </button>
+          {error && <p>{error.message}</p>}
+        </form>
+      </>
     );
   }
 }
