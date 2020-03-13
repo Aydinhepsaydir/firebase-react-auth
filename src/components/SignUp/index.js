@@ -39,13 +39,6 @@ class SignUpFormBase extends Component {
           .user(authUser.user.uid)
           .set({ username, email });
       })
-      // .then(authUser => {
-      //create user in cloud firestore
-      // console.log(authUser);
-      // return this.props.firebase
-      //   .cloudUser(authUser.user.uid)
-      //   .set({ username, email });
-      // })
       .catch(e => console.log(e))
       .then(authUser => {
         this.setState({ ...INITIAL_STATE });
@@ -73,9 +66,6 @@ class SignUpFormBase extends Component {
   addToRealtime = () => {
     const { currentUser } = this.props.firebase.auth;
     const { uid } = currentUser;
-
-    // console.log("currentUser TYPE: \n", typeof currentUser);
-    // console.log("currentUser: \n", currentUser);
 
     this.props.firebase.users().on("value", snapshot => {
       const usersObject = snapshot.val();

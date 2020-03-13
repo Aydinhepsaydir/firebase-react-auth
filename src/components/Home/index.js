@@ -9,13 +9,26 @@ class HomePage extends Component {
     super(props);
 
     this.firebase = this.props.firebase;
+
+    this.state = {
+      username: ""
+    };
+  }
+
+  async componentWillMount() {
+    const userId = this.firebase.auth.currentUser.uid;
+    const user = await this.firebase.getUsername(userId);
+    this.setState({
+      username: user.username
+    });
+    console.log(user);
   }
 
   render() {
     return (
       <div>
         <h1>Home</h1>
-        <p>Welcome, {this.props.firebase.auth.currentUser.displayName}</p>
+        <p>Welcome, {this.state.username}</p>
       </div>
     );
   }

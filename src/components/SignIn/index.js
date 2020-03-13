@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import { SignUpLink } from "../SignUp";
-import { withFirebase, StyledFirebaseAuth } from "../Firebase";
+import { withFirebase, StyledFirebaseAuth, firebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
 import { PasswordForgetLink } from "../PasswordForget";
 
@@ -26,6 +26,17 @@ class SignInFormBase extends Component {
     super(props);
     this.state = { ...INITIAL_STATE };
   }
+
+  uiConfig = () => {
+    return {
+      signInFlow: "redirect",
+      signInSuccessUrl: "/home",
+      signInOptions: [firebase.auth.FacebookAuthProvider.PROVIDER_ID],
+      callbacks: {
+        signInSuccess: () => true
+      }
+    };
+  };
 
   onSubmit = event => {
     const { email, password } = this.state;
@@ -56,7 +67,7 @@ class SignInFormBase extends Component {
     return (
       <>
         <StyledFirebaseAuth
-          uiConfig={this.props.firebase.uiConfig()}
+          uiConfig={this.uiConfig()}
           firebaseAuth={this.props.firebase.auth}
         />
         <h2>Or, if you don't want to use Facebook:</h2>

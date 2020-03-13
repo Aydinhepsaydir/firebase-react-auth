@@ -1,4 +1,3 @@
-import React from "react";
 import app from "firebase/app";
 import firebase from "firebase";
 import "firebase/auth";
@@ -23,6 +22,10 @@ class Firebase {
     this.auth = app.auth();
     this.db = app.database();
     this.cloudDb = app.firestore();
+
+    this.user = {
+      username: ""
+    };
   }
 
   // *** Auth API ***
@@ -42,6 +45,18 @@ class Firebase {
   user = uid => this.db.ref(`users/${uid}`);
 
   users = () => this.db.ref("users");
+
+  getUsername = uid =>
+    this.db
+      .ref(`users/${uid}`)
+      .once("value")
+      .then(snapshot => {
+        const userObject = snapshot.val();
+        this.user = {
+          username: userObject.username
+        };
+        return this.user;
+      });
 
   // *** Cloud Firestore User API ***
   cloudUser = uid => this.cloudDb.collection("users").doc(uid.toString());
