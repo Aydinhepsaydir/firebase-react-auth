@@ -8,9 +8,6 @@ import { compose } from "recompose";
 class HomePage extends Component {
   constructor(props) {
     super(props);
-
-    this.firebase = this.props.firebase;
-    this.user = this.props.user;
   }
 
   // async componentWillMount() {
@@ -27,9 +24,16 @@ class HomePage extends Component {
   }
 
   render() {
+    const { user } = this.props;
+
+    if (user == null) {
+      return <p>Loading...</p>;
+    }
+
     return (
       <div>
         <h1>Home</h1>
+        <p>Welcome, {user.username}</p>
       </div>
     );
   }

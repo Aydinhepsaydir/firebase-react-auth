@@ -8,11 +8,11 @@ class UserProvider extends Component {
     super(props);
 
     this.state = {
-      user: undefined
+      user: null
     };
   }
 
-  componentWillUpdate() {
+  componentDidMount() {
     const { firebase } = this.props;
 
     this.listener = firebase.auth.onAuthStateChanged(async authUser => {
