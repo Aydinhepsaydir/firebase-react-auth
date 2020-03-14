@@ -10,19 +10,6 @@ class HomePage extends Component {
     super(props);
   }
 
-  // async componentWillMount() {
-  //   const userId = this.firebase.auth.currentUser.uid;
-  //   const user = await this.firebase.getUsername(userId);
-  //   this.setState({
-  //     username: user.username
-  //   });
-  //   console.log(user);
-  // }
-
-  componentDidMount() {
-    console.log(this.props);
-  }
-
   render() {
     const { user } = this.props;
 

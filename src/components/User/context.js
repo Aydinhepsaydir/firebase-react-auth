@@ -23,7 +23,6 @@ class UserProvider extends Component {
           user: user
         });
       }
-      console.log("USER: \n", this.state.user);
     });
   }
 
@@ -38,12 +37,6 @@ class UserProvider extends Component {
     return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
   }
 }
-
-// export const withUser = Component => props => (
-//   <UserContext.Consumer>
-//     {user => <Component {...props} user={user} />}
-//   </UserContext.Consumer>
-// );
 
 const withUser = Component => {
   return props => {

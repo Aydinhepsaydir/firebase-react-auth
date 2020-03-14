@@ -2,7 +2,6 @@ import app from "firebase/app";
 import firebase from "firebase";
 import "firebase/auth";
 import "firebase/database";
-import "firebase/firestore";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 
 var config = {
@@ -21,7 +20,6 @@ class Firebase {
 
     this.auth = app.auth();
     this.db = app.database();
-    this.cloudDb = app.firestore();
   }
 
   // *** Auth API ***
@@ -50,11 +48,6 @@ class Firebase {
         const userObject = snapshot.val();
         return userObject;
       });
-
-  // *** Cloud Firestore User API ***
-  cloudUser = uid => this.cloudDb.collection("users").doc(uid.toString());
-
-  cloudUsers = () => this.cloudDb.collection("users");
 }
 
 export default Firebase;
