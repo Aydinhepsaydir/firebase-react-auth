@@ -54,7 +54,7 @@ class SignInFormBase extends Component {
   };
 
   componentDidUpdate = () => {
-    console.log("current user: \n", this.props.firebase.auth.currentUser);
+    console.log("current user: \n", this.props.firebase.auth);
   };
 
   onChange = event => {
