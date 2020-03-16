@@ -48,6 +48,9 @@ class Firebase {
         const userObject = snapshot.val();
         return userObject;
       });
+
+  // *** Realtime Database Groups API ***
+  group = uid => this.db.ref(`groups/${uid}`);
 }
 
 export default Firebase;

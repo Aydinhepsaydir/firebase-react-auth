@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import Navigation from "../Navigation";
@@ -14,6 +14,7 @@ import * as ROUTES from "../../constants/routes";
 import { render } from "@testing-library/react";
 
 import { withAuthentication } from "../Session";
+import JoinGroupPage from "../JoinGroup";
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
         <Route exact path={ROUTES.HOME} component={HomePage} />
         <Route exact path={ROUTES.ACCOUNT} component={AccountPage} />
         <Route exact path={ROUTES.ADMIN} component={AdminPage} />
+        <Route exact path={ROUTES.JOIN_GROUP} component={JoinGroupPage} />
       </div>
     </Router>
   );

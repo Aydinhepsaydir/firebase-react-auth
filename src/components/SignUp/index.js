@@ -40,11 +40,11 @@ class SignUpFormBase extends Component {
           .set({ username, email });
       })
       .catch(e => console.log(e))
-      .then(authUser => {
+      .then(() => {
         this.setState({ ...INITIAL_STATE });
         //withRouter() gives history prop from react-router
         //history allows us to redirect user to another page by pushing a route to it
-        this.props.history.push(ROUTES.HOME);
+        this.props.history.push(ROUTES.JOIN_GROUP);
       })
       .catch(error => {
         this.setState({ error });
@@ -58,12 +58,12 @@ class SignUpFormBase extends Component {
       signInFlow: "redirect",
       signInOptions: [firebase.auth.FacebookAuthProvider.PROVIDER_ID],
       callbacks: {
-        signInSuccess: () => this.addToRealtime()
+        signInSuccess: () => this.addFbUserToRealTime()
       }
     };
   };
 
-  addToRealtime = () => {
+  addFbUserToRealTime = () => {
     const { currentUser } = this.props.firebase.auth;
     const { uid } = currentUser;
 
@@ -92,13 +92,7 @@ class SignUpFormBase extends Component {
       this.username === "";
 
     return (
-      <form
-        onSubmit={
-          /*this.onSubmit*/ console.log(
-            "you just submitted the email and password sign up form"
-          )
-        }
-      >
+      <form onSubmit={this.onSubmit}>
         {/* controlled components */}
         <input
           name="username"

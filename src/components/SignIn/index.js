@@ -30,7 +30,7 @@ class SignInFormBase extends Component {
   uiConfig = () => {
     return {
       signInFlow: "redirect",
-      signInSuccessUrl: "/home",
+      signInSuccessUrl: ROUTES.JOIN_GROUP,
       signInOptions: [firebase.auth.FacebookAuthProvider.PROVIDER_ID],
       callbacks: {
         signInSuccess: () => true
