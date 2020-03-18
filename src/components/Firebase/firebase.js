@@ -51,6 +51,22 @@ class Firebase {
 
   // *** Realtime Database Groups API ***
   group = uid => this.db.ref(`groups/${uid}`);
+
+  groups = () => this.db.ref("groups");
+
+  getGroup = uid =>
+    this.db
+      .ref(`groups/${uid}`)
+      .once("value")
+      .then(snapshot => {
+        const groupObject = snapshot.val();
+        console.log("groupObject: \n", groupObject);
+        return groupObject;
+      })
+      .catch(e => console.log(e));
+
+  addUserToGroup = (groupId, userId) =>
+    this.db.ref(`groups/${groupId}/users/${userId}`);
 }
 
 export default Firebase;

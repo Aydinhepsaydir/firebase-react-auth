@@ -67,7 +67,7 @@ class SignUpFormBase extends Component {
     const { currentUser } = this.props.firebase.auth;
     const { uid } = currentUser;
 
-    this.props.firebase.users().on("value", snapshot => {
+    this.props.firebase.users().once("value", snapshot => {
       const usersObject = snapshot.val();
       if (!usersObject.hasOwnProperty(uid)) {
         this.props.firebase

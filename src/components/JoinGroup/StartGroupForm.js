@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import * as ROUTES from "../../constants/routes";
-import withUser from "../User";
+import { withUser } from "../User";
+import { withFirebase } from "../Firebase";
+import { compose } from "recompose";
+import { withRouter } from "react-router-dom";
 
 const INITIAL_STATE = {
   groupName: "",
@@ -16,17 +19,25 @@ class StartGroupForm extends Component {
 
   onSubmit = event => {
     const { groupName } = this.state;
-    const { user } = this.props;
+    const { user, firebase } = this.props;
     const time = new Date().getTime();
-    const uid = (groupName + "-" + time).toString();
+
+    const groupId = (groupName + "-" + time).toString();
+    const userId = firebase.auth.currentUser.uid;
 
     this.props.firebase
-      .group(uid)
+      .group(groupId)
       .set({
         groupName: groupName,
-        users: [{ user }]
+        users: []
       })
-      .catch(e => alert(e))
+      .catch(e => console.log(e))
+      .then(
+        firebase
+          .addUserToGroup(groupId, userId)
+          .set({ ...user })
+          .catch(e => console.log(e))
+      )
       .then(() => {
         this.setState({ ...INITIAL_STATE });
         //withRouter() gives history prop from react-router
@@ -34,6 +45,7 @@ class StartGroupForm extends Component {
         this.props.history.push(ROUTES.HOME);
       })
       .catch(error => {
+        console.log(error);
         this.setState({ error });
       });
     event.preventDefault();
@@ -58,7 +70,7 @@ class StartGroupForm extends Component {
             placeholder="Group Name"
           />
           <button type="submit" disabled={isInvalid}>
-            Create Group
+            Start Group
           </button>
         </form>
       </div>
@@ -66,4 +78,4 @@ class StartGroupForm extends Component {
   }
 }
 
-export default withUser(StartGroupForm);
+export default compose(withRouter, withUser, withFirebase)(StartGroupForm);

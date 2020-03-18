@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 import * as ROUTES from "../../constants/routes";
+import { withUser } from "../User";
+import { withFirebase } from "../Firebase";
+import { withRouter } from "react-router-dom";
+import { compose } from "recompose";
 
 const INITIAL_STATE = {
   groupId: "",
@@ -10,24 +14,49 @@ class JoinGroupForm extends Component {
   constructor(props) {
     super();
 
+    this.checkForGroup = this.checkForGroup.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+
     this.state = { ...INITIAL_STATE };
   }
 
-  onSubmit = event => {
-    // const { groupName } = this.state;
-    // this.props.firebase
-    //   .catch(e => console.log(e))
-    //   .then(() => {
-    //     this.setState({ ...INITIAL_STATE });
-    //     //withRouter() gives history prop from react-router
-    //     //history allows us to redirect user to another page by pushing a route to it
-    //     this.props.history.push(ROUTES.JOIN_GROUP);
-    //   })
-    //   .catch(error => {
-    //     this.setState({ error });
-    //   });
-    // event.preventDefault();
-  };
+  componentDidMount() {
+    console.log(this.state.groupId);
+  }
+
+  async checkForGroup() {
+    const { firebase } = this.props;
+    const { groupId } = this.state;
+    const group = await firebase.getGroup(groupId);
+
+    if (group) {
+      return group;
+    } else {
+      alert("Group does not exist. Please try again.");
+    }
+  }
+
+  onSubmit(event) {
+    const { groupId } = this.state;
+    const { user, firebase } = this.props;
+    const userId = firebase.auth.currentUser.uid;
+
+    this.checkForGroup()
+      .then(group => {
+        console.log("group.users: \n", group);
+        if (group.users.hasOwnProperty(userId)) {
+          alert("You are already in this group.");
+        } else {
+          firebase
+            .addUserToGroup(groupId, userId)
+            .set({ ...user })
+            .catch(e => console.log(e));
+        }
+      })
+      .catch(e => console.log(e));
+
+    event.preventDefault();
+  }
 
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });
@@ -51,9 +80,10 @@ class JoinGroupForm extends Component {
             Join Group
           </button>
         </form>
+        {/* <button onClick={this.onSubmit} /> */}
       </div>
     );
   }
 }
 
-export default JoinGroupForm;
+export default compose(withFirebase, withRouter, withUser)(JoinGroupForm);
