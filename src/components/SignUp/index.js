@@ -73,7 +73,7 @@ class SignUpFormBase extends Component {
         this.props.firebase
           .user(uid)
           .set({ username: currentUser.displayName, email: currentUser.email })
-          .then(this.props.history.push(ROUTES.HOME));
+          .then(this.props.history.push(ROUTES.JOIN_GROUP));
       } else {
         return this.props.history.push(ROUTES.HOME);
       }

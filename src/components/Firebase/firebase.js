@@ -67,6 +67,8 @@ class Firebase {
 
   addUserToGroup = (groupId, userId) =>
     this.db.ref(`groups/${groupId}/users/${userId}`);
+
+  addGroupToUser = uid => this.db.ref(`users/${uid}`);
 }
 
 export default Firebase;

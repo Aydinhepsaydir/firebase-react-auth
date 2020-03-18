@@ -10,8 +10,17 @@ class HomePage extends Component {
     super(props);
   }
 
+  checkForGroup = user => {
+    if (user.groupId) {
+      return <p>Cool group...</p>;
+    } else {
+      return <p>You are not part of a group yet...</p>;
+    }
+  };
+
   render() {
     const { user } = this.props;
+    console.log(user);
 
     if (user == null) {
       return <p>Loading...</p>;
@@ -21,6 +30,7 @@ class HomePage extends Component {
       <div>
         <h1>Home</h1>
         <p>Welcome, {user.username}</p>
+        {this.checkForGroup(user)}
       </div>
     );
   }

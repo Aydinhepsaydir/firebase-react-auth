@@ -21,7 +21,11 @@ class JoinGroupForm extends Component {
   }
 
   componentDidMount() {
-    console.log(this.state.groupId);
+    const { user, history } = this.props;
+    console.log("user", user);
+    // if (user.groupId) {
+    //   history.push(ROUTES.HOME);
+    // }
   }
 
   async checkForGroup() {
@@ -38,8 +42,13 @@ class JoinGroupForm extends Component {
 
   onSubmit(event) {
     const { groupId } = this.state;
-    const { user, firebase } = this.props;
+    const { user, firebase, history } = this.props;
+
+    console.log("user 1: \n", user);
+
     const userId = firebase.auth.currentUser.uid;
+
+    console.log("userId: \n", userId);
 
     this.checkForGroup()
       .then(group => {
@@ -47,10 +56,19 @@ class JoinGroupForm extends Component {
         if (group.users.hasOwnProperty(userId)) {
           alert("You are already in this group.");
         } else {
+          //add user to specified group
           firebase
             .addUserToGroup(groupId, userId)
             .set({ ...user })
             .catch(e => console.log(e));
+
+          //add groupId to user object in firebase
+          firebase.user(userId).set({ ...user, groupId: groupId });
+
+          //add groupId to user context
+          user.groupId = groupId;
+
+          history.push(ROUTES.HOME);
         }
       })
       .catch(e => console.log(e));

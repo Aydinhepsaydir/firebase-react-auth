@@ -25,6 +25,10 @@ class StartGroupForm extends Component {
     const groupId = (groupName + "-" + time).toString();
     const userId = firebase.auth.currentUser.uid;
 
+    if (user.groupId) {
+      alert("You are already a part of a group.");
+    }
+
     this.props.firebase
       .group(groupId)
       .set({
