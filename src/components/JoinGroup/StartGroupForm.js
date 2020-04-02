@@ -12,14 +12,14 @@ const INITIAL_STATE = {
 
 class StartGroupForm extends Component {
   constructor(props) {
-    super();
+    super(props);
 
     this.state = { ...INITIAL_STATE };
   }
 
   onSubmit = event => {
     const { groupName } = this.state;
-    const { user, firebase } = this.props;
+    const { user, firebase, history } = this.props;
     const time = new Date().getTime();
 
     const groupId = (groupName + "-" + time).toString();
@@ -27,26 +27,32 @@ class StartGroupForm extends Component {
 
     if (user.groupId) {
       alert("You are already a part of a group.");
+      history.push(ROUTES.JOIN_GROUP);
     }
 
     this.props.firebase
+      // create the group
       .group(groupId)
       .set({
         groupName: groupName,
         users: []
       })
       .catch(e => console.log(e))
+      // add current user to the group
       .then(
         firebase
           .addUserToGroup(groupId, userId)
           .set({ ...user })
           .catch(e => console.log(e))
       )
+      // add group to user
+      .then(firebase.user(userId).set({ ...user, groupId: groupId }))
+      .catch(e => console.log(e))
       .then(() => {
         this.setState({ ...INITIAL_STATE });
         //withRouter() gives history prop from react-router
         //history allows us to redirect user to another page by pushing a route to it
-        this.props.history.push(ROUTES.HOME);
+        history.push(ROUTES.HOME);
       })
       .catch(error => {
         console.log(error);
