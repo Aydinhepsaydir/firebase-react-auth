@@ -1,19 +1,12 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
-import { SignUpLink } from "../SignUp";
-import { withFirebase, StyledFirebaseAuth, firebase } from "../Firebase";
+import {
+  withFirebase,
+  StyledFirebaseAuth,
+  firebase
+} from "../../contexts/Firebase";
 import * as ROUTES from "../../constants/routes";
-import { PasswordForgetLink } from "../PasswordForget";
-
-const SignInPage = () => (
-  <div>
-    <h1>SignIn</h1>
-    <SignInForm />
-    <PasswordForgetLink />
-    <SignUpLink />
-  </div>
-);
 
 const INITIAL_STATE = {
   email: "",
@@ -98,5 +91,4 @@ class SignInFormBase extends Component {
 
 const SignInForm = compose(withRouter, withFirebase)(SignInFormBase);
 
-export default SignInPage;
-export { SignInForm };
+export default SignInForm;

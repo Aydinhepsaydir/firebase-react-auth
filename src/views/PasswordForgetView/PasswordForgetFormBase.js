@@ -1,22 +1,21 @@
 import React, { Component } from "react";
-import { withFirebase } from "../Firebase";
+import { withFirebase } from "../../contexts/Firebase";
 
 const INITIAL_STATE = {
-  passwordOne: "",
-  passwordTwo: "",
+  email: "",
   error: null
 };
 
-class PasswordChangeForm extends Component {
+class PasswordForgetFormBase extends Component {
   constructor(props) {
     super(props);
     this.state = { ...INITIAL_STATE };
   }
 
   onSubmit = event => {
-    const { passwordOne } = this.state;
+    const { email } = this.state;
     this.props.firebase
-      .doPasswordUpdate(passwordOne)
+      .doPasswordReset(email)
       .then(() => {
         this.setState({ ...INITIAL_STATE });
       })
@@ -31,24 +30,16 @@ class PasswordChangeForm extends Component {
   };
 
   render() {
-    const { passwordOne, passwordTwo, error } = this.state;
-    const isInvalid = passwordOne !== passwordTwo || passwordOne === "";
-
+    const { email, error } = this.state;
+    const isInvalid = email === "";
     return (
       <form onSubmit={this.onSubmit}>
         <input
-          name="passwordOne"
-          value={passwordOne}
+          name="email"
+          value={this.state.email}
           onChange={this.onChange}
-          type="password"
-          placeholder="New Password"
-        />
-        <input
-          name="passwordTwo"
-          value={passwordTwo}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Confirm New Password"
+          type="text"
+          placeholder="Email Address"
         />
         <button disabled={isInvalid} type="submit">
           Reset My Password
@@ -59,4 +50,6 @@ class PasswordChangeForm extends Component {
   }
 }
 
-export default withFirebase(PasswordChangeForm);
+const PasswordForgetForm = withFirebase(PasswordForgetFormBase);
+
+export default PasswordForgetForm;

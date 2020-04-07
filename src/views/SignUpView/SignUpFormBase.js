@@ -1,16 +1,9 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { withFirebase, firebase } from "../../contexts/Firebase";
 import * as ROUTES from "../../constants/routes";
-import { withFirebase, firebase } from "../Firebase";
 import { compose } from "recompose";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
-
-const SignUpPage = () => (
-  <div>
-    <h1>SignUp</h1>
-    <SignUpForm />
-  </div>
-);
+import { withRouter } from "react-router-dom";
 
 const INITIAL_STATE = {
   username: "",
@@ -92,13 +85,7 @@ class SignUpFormBase extends Component {
       this.username === "";
 
     return (
-      <form
-        onSubmit={
-          /*this.onSubmit*/ console.log(
-            "you just submitted the email and password sign up form"
-          )
-        }
-      >
+      <form onSubmit={this.onSubmit}>
         {/* controlled components */}
         <input
           name="username"
@@ -142,16 +129,9 @@ class SignUpFormBase extends Component {
   }
 }
 
-const SignUpLink = () => (
-  <p>
-    Don't have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
-  </p>
-);
-
 //HIGHER ORDER COMPONENTS
 //withRouter gives react-router functionality
 //withFirebase gives firebase functionality
 const SignUpForm = compose(withRouter, withFirebase)(SignUpFormBase);
 
-export default SignUpPage;
-export { SignUpForm, SignUpLink };
+export default SignUpForm;
